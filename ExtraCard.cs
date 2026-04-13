@@ -1,0 +1,18 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Balatro1
+{
+    public class ExtraCard : Card
+    {
+        public ExtraCard(Suit suit, CardValue value) : base(suit, value) { }
+
+        public override int CalculateBonus(IEnumerable<Card> hand)
+        {
+            int count = hand.Count(c => c.Value == this.Value);
+            return count * 2;
+        }
+
+        public override double CalculateMultiplier(IEnumerable<Card> hand) => 1.0;
+    }
+}
