@@ -5,6 +5,7 @@ namespace Balatro1
     public class ViewModel
     {
         private GameEngine _engine;
+        private int _cursorIndex = 0;
 
         public ViewModel(Model model)
         {
@@ -18,16 +19,47 @@ namespace Balatro1
 
             while (playing)
             {
+                if (_engine.CurrentHand.Count == 0)
+                    _cursorIndex = 0;
+                else if (_cursorIndex >= _engine.CurrentHand.Count)
+                    _cursorIndex = _engine.CurrentHand.Count - 1;
+
                 Console.Clear();
-                Console.WriteLine("Balatro C# Spel");
+                Console.WriteLine("Balatro C# Clone");
                 Console.WriteLine($"Score: {_engine.TotalScore}");
+                Console.WriteLine($"Ronde: {_engine.RoundsPlayed}/{_engine.MaxRounds}");
                 Console.WriteLine($"Deck: {_engine.RemainingCards} Kaarten over");
                 Console.WriteLine("-----------------------------------");
 
+                if (_engine.IsGameOver)
+                {
+                    Console.WriteLine("GAME OVER");
+                    Console.WriteLine($"Eindscore: {_engine.TotalScore}");
+                    Console.WriteLine("Wil je doorgaan?");
+                    Console.WriteLine("[C] Opnieuw spelen | [Q] Stoppen");
+
+                    string? gameOverInput = Console.ReadLine()?.ToUpper();
+
+                    if (gameOverInput == "C")
+                    {
+                        _engine.Reset();
+                        continue;
+                    }
+
+                    if (gameOverInput == "Q")
+                    {
+                        playing = false;
+                        continue;
+                    }
+
+                    continue;
+                }
+
                 for (int i = 0; i < _engine.CurrentHand.Count; i++)
                 {
+                    string cursor = i == _cursorIndex ? ">" : " ";
                     string check = _engine.SelectedCards.Contains(_engine.CurrentHand[i]) ? "[X]" : "[ ]";
-                    Console.Write($"{check} {i + 1}: ");
+                    Console.Write($"{cursor} {check} {i + 1}: ");
                     PrintCardWithColor(_engine.CurrentHand[i]);
                     Console.WriteLine();
                 }
@@ -39,17 +71,30 @@ namespace Balatro1
                 else
                     Console.WriteLine("Kies een kaart");
 
-                Console.WriteLine("\n[1-8] Kies | [S]peel | [D]iscard | [R]eset | [Q]uit");
-                string input = Console.ReadLine()?.ToUpper();
+                Console.WriteLine("\n[↑/↓] Scroll | [Enter] Kies | [S]peel | [D]iscard | [R]eset | [Q]uit");
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-                if (string.IsNullOrWhiteSpace(input)) continue;
-
-                if (input == "Q") playing = false;
-                else if (input == "S") { _engine.PlayHand(); Console.WriteLine("Gespeeld!"); Console.ReadKey(); }
-                else if (input == "D") _engine.DiscardCards();
-                else if (input == "R") _engine.Reset();
-                else if (int.TryParse(input, out int nr) && nr >= 1 && nr <= _engine.CurrentHand.Count)
-                    _engine.ToggleSelection(_engine.CurrentHand[nr - 1]);
+                if (keyInfo.Key == ConsoleKey.Q)
+                    playing = false;
+                else if (keyInfo.Key == ConsoleKey.S)
+                {
+                    _engine.PlayHand();
+                    Console.WriteLine("Gespeeld!");
+                    Console.ReadKey(true);
+                }
+                else if (keyInfo.Key == ConsoleKey.D)
+                    _engine.DiscardCards();
+                else if (keyInfo.Key == ConsoleKey.R)
+                {
+                    _engine.Reset();
+                    _cursorIndex = 0;
+                }
+                else if (keyInfo.Key == ConsoleKey.UpArrow && _cursorIndex > 0)
+                    _cursorIndex--;
+                else if (keyInfo.Key == ConsoleKey.DownArrow && _cursorIndex < _engine.CurrentHand.Count - 1)
+                    _cursorIndex++;
+                else if (keyInfo.Key == ConsoleKey.Enter && _engine.CurrentHand.Count > 0)
+                    _engine.ToggleSelection(_engine.CurrentHand[_cursorIndex]);
             }
         }
 
@@ -61,7 +106,8 @@ namespace Balatro1
 
             if (!string.IsNullOrEmpty(typePrefix))
             {
-                ConsoleColor typeColor = card.GetType().Name switch
+                string typeName = card.DisplayTypeName();
+                ConsoleColor typeColor = typeName switch
                 {
                     "BonusCard" => ConsoleColor.Yellow,
                     "ExtraCard" => ConsoleColor.Cyan,
@@ -81,9 +127,9 @@ namespace Balatro1
             ConsoleColor suitColor = card.Suit switch
             {
                 Suit.Hearts => ConsoleColor.Red,
-                
-                Suit.Spades => ConsoleColor.Red,
-               
+                Suit.Diamonds => ConsoleColor.Red,
+                Suit.Clubs => ConsoleColor.White,
+                Suit.Spades => ConsoleColor.White,
                 _ => ConsoleColor.White
             };
 

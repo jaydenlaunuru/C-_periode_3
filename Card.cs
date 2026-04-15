@@ -17,7 +17,7 @@ namespace Balatro1
         public virtual int CalculateBonus(IEnumerable<Card> hand) => 0;
         public virtual double CalculateMultiplier(IEnumerable<Card> hand) => 1.0;
 
-        public string GetTypePrefix()
+        public virtual string GetTypePrefix()
         {
             return this.GetType().Name switch
             {
@@ -30,6 +30,11 @@ namespace Balatro1
                 _ => ""
             };
         }
+
+        // Used by the UI to pick a color for the card type. Can be overridden by decorators
+        // so the visual color reflects the wrapped card (for example a sticker on a BonusCard
+        // should show the bonus color, not the sticker color).
+        public virtual string DisplayTypeName() => this.GetType().Name;
 
         public string GetSuitSymbol()
         {

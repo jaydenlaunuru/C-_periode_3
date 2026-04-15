@@ -20,5 +20,18 @@ namespace Balatro1
         public override double CalculateMultiplier(IEnumerable<Card> hand)
             => _card.CalculateMultiplier(hand);
 
+        public override string GetTypePrefix() => "[★] ";
+
+        public override string DisplayTypeName() => _card.GetType().Name;
+
+        public override string ToString()
+        {
+            return $"{GetTypePrefix()}{_card.ToString()}";
+        }
+
+        // Expose the inner card's prefix so the UI can show both the sticker
+        // marker and the wrapped card's type with the correct color.
+        public string GetInnerTypePrefix() => _card.GetTypePrefix();
+
     }
 }

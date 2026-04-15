@@ -6,10 +6,15 @@ namespace Balatro1
 {
     public class Deck
     {
-        private List<Card> _cards = new();
-        private readonly Random _random = new();
+        private List<Card> _cards;
+        private readonly Random _random;
 
-        public Deck() => Reset();
+        public Deck()
+        {
+            _random = new Random();
+            _cards = new List<Card>();
+            Reset();
+        }
 
         public int RemainingCards => _cards.Count;
 
@@ -31,20 +36,23 @@ namespace Balatro1
 
         private void MakeSpecialCards()
         {
+            var used = new HashSet<int>();
             for (int i = 0; i < 5; i++)
             {
                 int index = _random.Next(_cards.Count);
+                while (used.Contains(index))
+                    index = _random.Next(_cards.Count);
+                used.Add(index);
+
                 Card old = _cards[index];
 
-                Card special = (i % 5) switch
-                {
-                    0 => new BonusCard(old.Suit, old.Value),
-                    1 => new ExtraCard(old.Suit, old.Value),
-                    2 => new GlassCard(old.Suit, old.Value),
-                    3 => new WildCard(old.Suit, old.Value),
-                    4 => new SteelCard(old.Suit, old.Value),
-                    _ => old
-                };
+                Card special;
+                int mod = i % 5;
+                if (mod == 0) special = new BonusCard(old.Suit, old.Value);
+                else if (mod == 1) special = new ExtraCard(old.Suit, old.Value);
+                else if (mod == 2) special = new GlassCard(old.Suit, old.Value);
+                else if (mod == 3) special = new WildCard(old.Suit, old.Value);
+                else /* mod == 4 */ special = new SteelCard(old.Suit, old.Value);
 
                 _cards[index] = special;
             }
@@ -52,12 +60,17 @@ namespace Balatro1
 
         private void AddStickers()
         {
+            var used = new HashSet<int>();
             for (int i = 0; i < 3; i++)
             {
                 int index = _random.Next(_cards.Count);
+                while (used.Contains(index))
+                    index = _random.Next(_cards.Count);
+                used.Add(index);
+
                 Card card = _cards[index];
 
-                if (card is not StickerDecorator)
+                if (!(card is StickerDecorator))
                 {
                     int points = (_random.Next(1, 4)) * 5;
                     _cards[index] = new StickerDecorator(card, points);
@@ -65,7 +78,10 @@ namespace Balatro1
             }
         }
 
-        public void Shuffle() => _cards = _cards.OrderBy(_ => _random.Next()).ToList();
+        public void Shuffle()
+        {
+            _cards = _cards.OrderBy(x => _random.Next()).ToList();
+        }
 
         public Card? TakeCard()
         {

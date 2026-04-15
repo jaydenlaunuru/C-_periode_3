@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Marvellous\\Documents\\Balatro1\\Balatro1.csproj": {}
+    "C:\\xampp\\htdocs\\C#_periode_3\\Balatro1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Marvellous\\Documents\\Balatro1\\Balatro1.csproj": {
+    "C:\\xampp\\htdocs\\C#_periode_3\\Balatro1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Marvellous\\Documents\\Balatro1\\Balatro1.csproj",
+        "projectUniqueName": "C:\\xampp\\htdocs\\C#_periode_3\\Balatro1.csproj",
         "projectName": "Balatro1",
-        "projectPath": "C:\\Users\\Marvellous\\Documents\\Balatro1\\Balatro1.csproj",
-        "packagesPath": "C:\\Users\\Marvellous\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Marvellous\\Documents\\Balatro1\\obj\\",
+        "projectPath": "C:\\xampp\\htdocs\\C#_periode_3\\Balatro1.csproj",
+        "packagesPath": "C:\\Users\\jayde\\.nuget\\packages\\",
+        "outputPath": "C:\\xampp\\htdocs\\C#_periode_3\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Marvellous\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\jayde\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -61,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",

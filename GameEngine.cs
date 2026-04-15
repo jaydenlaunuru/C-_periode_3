@@ -5,9 +5,11 @@ namespace Balatro1
 {
     public class GameEngine
     {
+        private const int MaxRoundsPerGame = 5;
         private Model _model;
         private List<Card> _selectedCards = new();
         private double _totalScore = 0;
+        private int _roundsPlayed = 0;
         private readonly ScoreCalculator _calculator = new ScoreCalculator();
         private readonly HandEvaluator _evaluator = new HandEvaluator();
 
@@ -15,6 +17,9 @@ namespace Balatro1
         public List<Card> SelectedCards => _selectedCards;
         public double TotalScore => _totalScore;
         public int RemainingCards => _model.Deck.RemainingCards;
+        public int RoundsPlayed => _roundsPlayed;
+        public int MaxRounds => MaxRoundsPerGame;
+        public bool IsGameOver => _roundsPlayed >= MaxRoundsPerGame;
 
         public GameEngine(Model model)
         {
@@ -28,6 +33,7 @@ namespace Balatro1
             _model.Hand.Cards.Clear();
             _selectedCards.Clear();
             _totalScore = 0;
+            _roundsPlayed = 0;
             FillHand();
         }
 
@@ -51,7 +57,7 @@ namespace Balatro1
 
         public void PlayHand()
         {
-            if (_selectedCards.Count == 0) return;
+            if (_selectedCards.Count == 0 || IsGameOver) return;
 
             var (chips, multi) = GetCurrentScore();
             _totalScore += chips * multi;
@@ -65,6 +71,7 @@ namespace Balatro1
 
             _selectedCards.Clear();
             FillHand();
+            _roundsPlayed++;
         }
 
         public void DiscardCards()
