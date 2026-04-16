@@ -31,9 +31,6 @@ namespace Balatro1
             };
         }
 
-        // Used by the UI to pick a color for the card type. Can be overridden by decorators
-        // so the visual color reflects the wrapped card (for example a sticker on a BonusCard
-        // should show the bonus color, not the sticker color).
         public virtual string DisplayTypeName() => this.GetType().Name;
 
         public string GetSuitSymbol()
